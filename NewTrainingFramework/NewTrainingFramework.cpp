@@ -10,9 +10,14 @@
 GLuint vboId;
 Shaders myShaders;
 
+Matrix m;
+float m_time;
+
 int Init ( ESContext *esContext )
 {
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
+
+	m.SetIdentity();
 
 	//triangle data (heap)
 	Vertex verticesData[3];
@@ -47,6 +52,9 @@ void Draw ( ESContext *esContext )
 	//connect buffer and specify his type
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
+	//передаем матрицу преобразований в шейдер
+	glUniformMatrix4fv(myShaders.matrixTransform, 1, false, (GLfloat *)&m);
+
 	GLfloat* ptr = (GLfloat *)0;
 
 	if(myShaders.positionAttribute != -1)
@@ -79,7 +87,8 @@ void Draw ( ESContext *esContext )
 
 void Update ( ESContext *esContext, float deltaTime )
 {
-
+	m_time += deltaTime;
+	m.SetRotationY(m_time);
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
