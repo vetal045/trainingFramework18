@@ -1,3 +1,7 @@
 ﻿  NewTrainingFramework.cpp
+c:\programming\gameloft (git)\trainingframework18\trainingframework\newtrainingframework\newtrainingframework.cpp(110): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\programming\gameloft (git)\trainingframework18\trainingframework\newtrainingframework\newtrainingframework.cpp(115): warning C4244: аргумент: преобразование "double" в "GLfloat", возможна потеря данных
+c:\programming\gameloft (git)\trainingframework18\trainingframework\newtrainingframework\newtrainingframework.cpp(113): warning C4390: ";": обнаружен пустой контролируемый оператор; это правильно?
+Globals.obj : warning LNK4075: эх єўшЄ√трхЄё  "/EDITANDCONTINUE" шч-чр ёяхЎшЇшърЎшш "/SAFESEH"
   NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.exe
   NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.pdb (Full PDB)

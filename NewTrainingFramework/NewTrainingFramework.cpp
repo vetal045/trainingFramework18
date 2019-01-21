@@ -6,19 +6,31 @@
 #include "Vertex.h"
 #include "Shaders.h"
 #include "Globals.h"
+#include "Model.h"
 
 GLuint vboId;
 Shaders myShaders;
 
+Model model;
 Matrix m;
+Matrix m2;
+Matrix m3;
 float m_time;
+double size = 0.05;
+double rotation = 0.05;
+bool left = false, right = false;
+double trans = 0.0;
+
+char modelPath[] = "../Resources/Models/Woman1.nfg";
 
 int Init ( ESContext *esContext )
 {
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
-
+	glEnable(GL_DEPTH_TEST);
 	m.SetIdentity();
 
+	model.loadModel(modelPath);
+	/*
 	//triangle data (heap)
 	Vertex verticesData[3];
 
@@ -38,6 +50,7 @@ int Init ( ESContext *esContext )
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesData), verticesData, GL_STATIC_DRAW);
 	//отвязка буфера(одновременно может быть активен только один буфер каждого типа)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	*/
 
 	//creation of shaders and program 
 	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
@@ -49,8 +62,10 @@ void Draw ( ESContext *esContext )
 	glClear(GL_COLOR_BUFFER_BIT);
 	//specify shader which we use
 	glUseProgram(myShaders.program);
+
 	//connect buffer and specify his type
-	glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	glBindBuffer(GL_ARRAY_BUFFER, model.m_hVertexBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.m_hIndexBuffer);
 
 	//передаем матрицу преобразований в шейдер
 	glUniformMatrix4fv(myShaders.matrixTransform, 1, false, (GLfloat *)&m);
@@ -77,10 +92,11 @@ void Draw ( ESContext *esContext )
 		glVertexAttribPointer(myShaders.colorAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), ptr + 3);
 	}
 
-	//отрисовываем, используя вершинный буфер (последний параметр - указываем, сколько вершин)
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	//отвязываем буфер
+	// отрисовываем, используя вершинный буфер
+	glDrawElements(GL_TRIANGLES, model.m_noIndeces, GL_UNSIGNED_INT, (void*)0);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
 }
@@ -88,16 +104,48 @@ void Draw ( ESContext *esContext )
 void Update ( ESContext *esContext, float deltaTime )
 {
 	m_time += deltaTime;
-	m.SetRotationY(m_time);
+
+	if (size > 0 && size < 0.6)
+	{
+		m.SetScale(size);
+	}
+
+	if (rotation > 0.1);
+	{
+		m2.SetRotationY(rotation);
+		m = m*m2;
+	}
+
+	//m3.SetTranslation(-0.5f, 0.0f, 0.0f);
+	//m = m*m3;
+
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 {
-
+	switch (key) 
+	{
+	case 'W':
+		size += 0.05;
+		break;
+	case 'S':
+		size -= 0.05;
+		break;
+	case 'A':
+		rotation += 0.05;
+		break;
+	case 'D':
+		rotation -= 0.05;
+		break;
+	default:
+		break;
+	}
 }
 
 void CleanUp()
 {
+	glDeleteBuffers(1, &model.m_hVertexBuffer);
+	glDeleteBuffers(1, &model.m_hIndexBuffer);
 	glDeleteBuffers(1, &vboId);
 }
 
