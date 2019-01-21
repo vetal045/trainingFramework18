@@ -140,7 +140,11 @@ cocos2d/external/Box2D/proj.win32/Release.*/
 cocos2d/external/recast/proj.win32/Release.*/
 proj.win32/*.sdf
 proj.win32/*.opensdf
+proj.win32/*.opendb
 proj.win32/Debug.*/
 proj.win32/Release.*/
-
+*.VC.VC.opendb
+*.VC.VC.opensdf
+*.opensdf
+*.opendb
 # others

@@ -21,10 +21,17 @@ int Init ( ESContext *esContext )
 	verticesData[1].pos.x = -0.5f;  verticesData[1].pos.y = -0.5f;  verticesData[1].pos.z =  0.0f;
 	verticesData[2].pos.x =  0.5f;  verticesData[2].pos.y = -0.5f;  verticesData[2].pos.z =  0.0f;
 
-	//buffer object
+	verticesData[0].color.x = 0.1f;  verticesData[0].color.y = 0.0f;  verticesData[0].color.z = 0.0f;
+	verticesData[1].color.x = 0.0f;  verticesData[1].color.y = 1.0f;  verticesData[1].color.z = 0.0f;
+	verticesData[2].color.x = 0.0f;  verticesData[2].color.y = 0.0f;  verticesData[2].color.z = 1.0f;
+
+	//генерация буфера в видеопамяти
 	glGenBuffers(1, &vboId);
+	//привязка сгенерированного буфера (GL_ARRAY_BUFFER указывает на тип буфера)
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
+	//выделение видеопамяти и передача данных
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesData), verticesData, GL_STATIC_DRAW);
+	//отвязка буфера(одновременно может быть активен только один буфер каждого типа)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	//creation of shaders and program 
@@ -35,20 +42,36 @@ int Init ( ESContext *esContext )
 void Draw ( ESContext *esContext )
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	//specify shader which we use
 	glUseProgram(myShaders.program);
-
+	//connect buffer and specify his type
 	glBindBuffer(GL_ARRAY_BUFFER, vboId);
 
-	
+	GLfloat* ptr = (GLfloat *)0;
+
 	if(myShaders.positionAttribute != -1)
 	{
 		glEnableVertexAttribArray(myShaders.positionAttribute);
-		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), ptr);
+		//рассказываем шейдеру где какие атрибуты искать
+		//where take data for array of attributes and set format of them
+		//1 arg - number of array's attributes
+		//2 arg - size of components (3 floats to 1 vertex)
+		//3 arg - component type
+		//5 arg - Задает смещение байта между последовательными атрибутами вершинной вершины. 
+		//Если шаг равен 0, общие атрибуты вершин понимаются плотно упакованными в массив.
+		//6 arg - указывает смещение относительно начала вершины	
 	}
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	if (myShaders.colorAttribute != -1)
+	{
+		glEnableVertexAttribArray(myShaders.colorAttribute);
+		glVertexAttribPointer(myShaders.colorAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), ptr + 3);
+	}
 
+	//отрисовываем, используя вершинный буфер (последний параметр - указываем, сколько вершин)
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//отвязываем буфер
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );

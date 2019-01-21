@@ -1,4 +1,3 @@
 ﻿  NewTrainingFramework.cpp
-Globals.obj : warning LNK4075: не учитывается "/EDITANDCONTINUE" из-за спецификации "/SAFESEH"
-  NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\Gameloft\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.exe
-  NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\Gameloft\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.pdb (Full PDB)
+  NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.exe
+  NewTrainingFramework.vcxproj -> C:\Programming\Gameloft (Git)\trainingFramework18\trainingFramework\\BIN\NewTrainingFramework.pdb (Full PDB)
